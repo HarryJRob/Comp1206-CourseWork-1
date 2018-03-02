@@ -4,6 +4,10 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Stack;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -11,6 +15,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -21,10 +26,12 @@ import javax.swing.event.ChangeListener;
 
 public class DFrame extends JFrame {
 
-	Pen curPen = new Pen(12, new Color(0));
-	Graphics2D doilieGraphicsArea;
+	Graphics2D doilieGraphics;
+//	Stack<?> undoStack = new Stack<?>();
+//	Stack<?> redoStack = new Stack<?>():
 	
 	public void init() {
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		this.setLayout(new BorderLayout());
 		this.setTitle("Digital Doilies");
@@ -33,7 +40,40 @@ public class DFrame extends JFrame {
 		//Drawing panel setup
 		JPanel drawingPanel = new JPanel();
 		drawingPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-		doilieGraphicsArea = (Graphics2D) drawingPanel.getGraphics();
+		drawingPanel.setBackground(new Color(0));
+		
+		drawingPanel.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		
 		//ToolBar set up
 		JToolBar toolbar = new JToolBar();	
@@ -65,6 +105,7 @@ public class DFrame extends JFrame {
 			penSelectionPanel.add(colorSelector);
 			
 			JTextField sizeSelector = new JTextField(2);
+			
 			sizeSelector.setToolTipText("Set the size of the current pen");
 			penSelectionPanel.add(sizeSelector);
 			
@@ -139,5 +180,6 @@ public class DFrame extends JFrame {
 		}
 		
 	}
+
 	
 }

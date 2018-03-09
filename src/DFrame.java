@@ -1,12 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -44,11 +40,6 @@ public class DFrame extends JFrame {
 		{
 			JPanel penSelectionPanel = new JPanel();
 			
-//			JComboBox<Pen> penSelector = new JComboBox<Pen>();
-//			penSelector.setToolTipText("Select a pen or make a new one");
-//			penSelectionPanel.add(penSelector);
-//			penSelector.addItem(curPen);
-			
 			JButton colorSelector = new JButton("Sample");
 			colorSelector.setContentAreaFilled(false);
 			colorSelector.setOpaque(true);
@@ -57,7 +48,7 @@ public class DFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					new colourChooserDialog(colorSelector);
+					new colourChooserDialog(colorSelector, drawingPanel);
 				}
 				
 			});
@@ -71,6 +62,14 @@ public class DFrame extends JFrame {
 			
 			JCheckBox eraserSelection = new JCheckBox();
 			eraserSelection.setToolTipText("Toggle eraser");
+			eraserSelection.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					drawingPanel.setIsEraser(eraserSelection.isSelected());
+				}
+			
+			} );
 			penSelectionPanel.add(eraserSelection);
 			
 			toolbar.add(penSelectionPanel, BorderLayout.WEST);
@@ -82,6 +81,14 @@ public class DFrame extends JFrame {
 			
 			JButton clearDisplay = new JButton("Clear");
 			clearDisplay.setToolTipText("Clear the current doilie");
+			clearDisplay.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					drawingPanel.clearScreen();
+				}
+			
+			} );
 			doilieControlPanel.add(clearDisplay);
 			
 			JTextField numOfSectors = new JTextField(2);
@@ -89,19 +96,52 @@ public class DFrame extends JFrame {
 			doilieControlPanel.add(numOfSectors);
 			
 			JCheckBox showSectorLines = new JCheckBox();
+			showSectorLines.setSelected(true);
 			showSectorLines.setToolTipText("Toggle sector lines");
+			showSectorLines.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					drawingPanel.setDrawSectors(showSectorLines.isSelected());
+				}
+			
+			} );
 			doilieControlPanel.add(showSectorLines);
 			
 			JCheckBox reflectDraw = new JCheckBox();
 			reflectDraw.setToolTipText("Reflect drawn points");
+			reflectDraw.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					drawingPanel.setReflectPoints(reflectDraw.isSelected());
+				}
+			
+			} );
 			doilieControlPanel.add(reflectDraw);
 			
 			JButton undoButton = new JButton("↩");
 			undoButton.setToolTipText("Undo draw action");
+			undoButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					drawingPanel.undo();
+				}
+			
+			} );
 			doilieControlPanel.add(undoButton);
 			
 			JButton redoButton = new JButton("↪");
 			redoButton.setToolTipText("Redo draw action");
+			redoButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					drawingPanel.redo();
+				}
+			
+			} );
 			doilieControlPanel.add(redoButton);
 			
 			toolbar.add(doilieControlPanel, BorderLayout.EAST	);
@@ -119,7 +159,7 @@ public class DFrame extends JFrame {
 	@SuppressWarnings("serial")
 	private class colourChooserDialog extends JDialog {
 		
-		public colourChooserDialog(JButton colorButton) {
+		public colourChooserDialog(JButton colorButton, DrawingPanel drawingPanel) {
 			this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
 			this.setTitle("Colour Chooser");
 			this.setSize(new Dimension(700,400));
@@ -130,8 +170,10 @@ public class DFrame extends JFrame {
 
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					colorButton.setBackground(colourChooser.getColor());
-					colorButton.setForeground(colourChooser.getColor());
+					Color c = colourChooser.getColor();
+					colorButton.setBackground(c);
+					colorButton.setForeground(c);
+					drawingPanel.setColor(c);
 				}
 			
 			});

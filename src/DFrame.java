@@ -7,15 +7,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Stack;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -25,10 +22,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class DFrame extends JFrame {
-
-	Graphics2D doilieGraphics;
-//	Stack<?> undoStack = new Stack<?>();
-//	Stack<?> redoStack = new Stack<?>():
 	
 	public void init() {
 		
@@ -38,42 +31,9 @@ public class DFrame extends JFrame {
 		this.setMinimumSize(new Dimension(450,450));
 
 		//Drawing panel setup
-		JPanel drawingPanel = new JPanel();
+		DrawingPanel drawingPanel = new DrawingPanel();
 		drawingPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		drawingPanel.setBackground(new Color(0));
-		
-		drawingPanel.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
 		
 		//ToolBar set up
 		JToolBar toolbar = new JToolBar();	
@@ -153,8 +113,10 @@ public class DFrame extends JFrame {
 		
         this.setSize(750,750);
        	this.setVisible(true);
+       	drawingPanel.init();
 	}
 
+	@SuppressWarnings("serial")
 	private class colourChooserDialog extends JDialog {
 		
 		public colourChooserDialog(JButton colorButton) {

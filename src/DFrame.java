@@ -1,9 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -11,8 +12,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
+import javax.swing.JSpinner;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -32,13 +32,12 @@ public class DFrame extends JFrame {
 		drawingPanel.setBackground(new Color(0));
 		
 		//ToolBar set up
-		JToolBar toolbar = new JToolBar();	
-		toolbar.setRollover(true);
-		toolbar.setLayout(new BorderLayout());
+		JPanel toolbar = new JPanel();	
+
+		toolbar.setLayout(new GridLayout(9,1));
 		
 		//Pen selection
 		{
-			JPanel penSelectionPanel = new JPanel();
 			
 			JButton colorSelector = new JButton("Sample");
 			colorSelector.setContentAreaFilled(false);
@@ -53,14 +52,22 @@ public class DFrame extends JFrame {
 				
 			});
 			
-			penSelectionPanel.add(colorSelector);
+			toolbar.add(colorSelector);
 			
-			JTextField sizeSelector = new JTextField(2);
-			
+			JSpinner sizeSelector = new JSpinner();
+			sizeSelector.setValue(12);
+			sizeSelector.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					drawingPanel.setPenSize((Integer)sizeSelector.getValue());
+				}
+
+			} );
 			sizeSelector.setToolTipText("Set the size of the current pen");
-			penSelectionPanel.add(sizeSelector);
+			toolbar.add(sizeSelector);
 			
-			JCheckBox eraserSelection = new JCheckBox();
+			JCheckBox eraserSelection = new JCheckBox("Toggle Eraser");
 			eraserSelection.setToolTipText("Toggle eraser");
 			eraserSelection.addActionListener(new ActionListener() {
 
@@ -70,14 +77,11 @@ public class DFrame extends JFrame {
 				}
 			
 			} );
-			penSelectionPanel.add(eraserSelection);
-			
-			toolbar.add(penSelectionPanel, BorderLayout.WEST);
+			toolbar.add(eraserSelection);
 		}
 		
 		//Doilie control panel
 		{
-			JPanel doilieControlPanel = new JPanel();
 			
 			JButton clearDisplay = new JButton("Clear");
 			clearDisplay.setToolTipText("Clear the current doilie");
@@ -89,13 +93,22 @@ public class DFrame extends JFrame {
 				}
 			
 			} );
-			doilieControlPanel.add(clearDisplay);
+			toolbar.add(clearDisplay);
 			
-			JTextField numOfSectors = new JTextField(2);
+			JSpinner numOfSectors = new JSpinner();
+			numOfSectors.setValue(8);
 			numOfSectors.setToolTipText("Change the number of sectors");
-			doilieControlPanel.add(numOfSectors);
+			numOfSectors.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					drawingPanel.setSectors((Integer)numOfSectors.getValue());
+				}
+
+			} );
+			toolbar.add(numOfSectors);
 			
-			JCheckBox showSectorLines = new JCheckBox();
+			JCheckBox showSectorLines = new JCheckBox("Toggle Sector Lines");
 			showSectorLines.setSelected(true);
 			showSectorLines.setToolTipText("Toggle sector lines");
 			showSectorLines.addActionListener(new ActionListener() {
@@ -106,9 +119,9 @@ public class DFrame extends JFrame {
 				}
 			
 			} );
-			doilieControlPanel.add(showSectorLines);
+			toolbar.add(showSectorLines);
 			
-			JCheckBox reflectDraw = new JCheckBox();
+			JCheckBox reflectDraw = new JCheckBox("Reflect drawn points");
 			reflectDraw.setToolTipText("Reflect drawn points");
 			reflectDraw.addActionListener(new ActionListener() {
 
@@ -118,7 +131,7 @@ public class DFrame extends JFrame {
 				}
 			
 			} );
-			doilieControlPanel.add(reflectDraw);
+			toolbar.add(reflectDraw);
 			
 			JButton undoButton = new JButton("↩");
 			undoButton.setToolTipText("Undo draw action");
@@ -130,7 +143,7 @@ public class DFrame extends JFrame {
 				}
 			
 			} );
-			doilieControlPanel.add(undoButton);
+			toolbar.add(undoButton);
 			
 			JButton redoButton = new JButton("↪");
 			redoButton.setToolTipText("Redo draw action");
@@ -142,16 +155,14 @@ public class DFrame extends JFrame {
 				}
 			
 			} );
-			doilieControlPanel.add(redoButton);
-			
-			toolbar.add(doilieControlPanel, BorderLayout.EAST	);
+			toolbar.add(redoButton);
 		}
 		
-		this.add(toolbar, BorderLayout.NORTH);
+		this.add(toolbar, BorderLayout.WEST);
 		
 		this.add(drawingPanel, BorderLayout.CENTER);
 		
-        this.setSize(750,750);
+        this.setSize((int) (Toolkit.getDefaultToolkit().getScreenSize().width*0.5),(int) (Toolkit.getDefaultToolkit().getScreenSize().height*0.7));
        	this.setVisible(true);
        	drawingPanel.init();
 	}
